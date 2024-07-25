@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
+
 import re
 import sys
+
 from pathlib import Path
 
 from PySide6.QtGui import QGuiApplication
@@ -21,11 +23,6 @@ class BackendCalculator(QObject):
 
 	def __init__(self) -> None:
 		QObject.__init__(self)
-
-		self._expression: str = ""
-
-	def display(self) -> None:
-		...
 
 	@Slot(str)
 	def history(self, expression: str) -> None:
@@ -76,13 +73,19 @@ class BackendCalculator(QObject):
 						num_inside = num_inside[1:]
 					else:
 						num_inside = '-' + num_inside
-					self.optChangeSign.emit(expression[:match.start()] + f"{num_inside}")
+					self.optChangeSign.emit(
+						expression[:match.start()] + f"{num_inside}"
+					)
 				else:
 					# Иначе оборачиваем число в скобки и меняем знак
 					if num.startswith('-'):
-						self.optChangeSign.emit(expression[:match.start()] + f"({num[1:]})")
+						self.optChangeSign.emit(
+							expression[:match.start()] + f"({num[1:]})"
+						)
 					else:
-						self.optChangeSign.emit(expression[:match.start()] + f"(-{num})")
+						self.optChangeSign.emit(
+							expression[:match.start()] + f"(-{num})"
+						)
 
 
 if __name__ == "__main__":
