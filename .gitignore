@@ -68,6 +68,10 @@ instance/
 # Scrapy stuff:
 .scrapy
 
+# qml
+*.qmlproject
+*.qmlproject.user
+
 # Sphinx documentation
 docs/_build/
 
