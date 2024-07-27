@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 Button {
+    hoverEnabled: false
 
     Layout.preferredHeight: 50
     Layout.preferredWidth: 50
@@ -10,6 +11,8 @@ Button {
     Layout.topMargin: 15
     Layout.leftMargin: 15
     Layout.rightMargin: 15
+
+
 
     contentItem: Image {
         source: "../../icons/icons8-microphone-48.png"

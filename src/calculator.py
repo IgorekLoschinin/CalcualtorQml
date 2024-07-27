@@ -45,12 +45,16 @@ class BackendCalculator(QObject):
 
 	@staticmethod
 	def process_percentages(expression: str) -> str:
+
 		# Find all occurrences of percentages in an expression
 		matches = re.finditer(r'(\d+(\.\d+)?)%', expression)
 		for match in matches:
 			percentage = float(match.group(1))
+
 			# Replace the percentage with its numeric value
-			expression = expression.replace(match.group(0), f"({percentage}/100)")
+			expression = expression.replace(
+				match.group(0), f"({percentage}/100)"
+			)
 
 		return expression
 
@@ -76,7 +80,8 @@ class BackendCalculator(QObject):
 						expression[:match.start()] + f"{num_inside}"
 					)
 				else:
-					# Иначе оборачиваем число в скобки и меняем знак
+					# Otherwise, we wrap the number in brackets and change the
+					# sign
 					if num.startswith('-'):
 						self.optChangeSign.emit(
 							expression[:match.start()] + f"({num[1:]})"
