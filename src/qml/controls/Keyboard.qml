@@ -190,7 +190,11 @@ GridLayout {
             bgColorPos1: "#363a46"
             bgColorPos2: "#292d36"
 
-            onClicked: buttonClicked(".")
+            onClicked: {
+                if (displayArea.outputValue === "0") {
+                    displayArea.outputValue += "."
+                }
+            }
         }
     }
 

@@ -56,7 +56,6 @@ class BackendCalculator(QObject):
 
 	@Slot(str)
 	def changeSign(self, expression: str) -> None:
-		""" Операция по изменению знака """
 
 		if expression:
 			# Using a regular expression to find the last number or expression
