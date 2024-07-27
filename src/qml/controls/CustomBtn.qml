@@ -5,6 +5,7 @@ import QtQuick.Controls
 Button {
     id: customBtn
     anchors.fill: parent
+    hoverEnabled: false
 
     font.pointSize: 16
 
