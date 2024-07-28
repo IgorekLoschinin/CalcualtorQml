@@ -30,10 +30,15 @@ class BackendCalculator(QObject):
 
 	@property
 	def expression(self):
+		""" Returns the processed expression. """
 		return self._expression
 
 	@Slot(str)
 	def calculate(self, expression: str) -> None:
+		""" The method that processes and calculates a mathematical expression.
+
+		:param expression: Mathematical expression that comes from the display.
+		"""
 		try:
 			self._expression = deepcopy(expression)
 
@@ -73,42 +78,52 @@ class BackendCalculator(QObject):
 
 	@Slot(str)
 	def changeSign(self, expression: str) -> None:
-		if expression:
-			# Using a regular expression to find the last number or expression
-			# in parentheses
-			match = re.search(r'(\(?-?\d+(\.\d+)?\)?)$', expression)
-			if match:
-				num = match.group(0)
+		""" The method processes the expression and changes the sign of the
+		first number from the end of the found number to the opposite.
 
-				# If the number is already in parentheses, extract it and
-				# change the sign
-				if num.startswith('(') and num.endswith(')'):
-					num_inside = num[1:-1]
-					if num_inside.startswith('-'):
-						num_inside = num_inside[1:]
-					else:
-						num_inside = '-' + num_inside
-					self.optChangeSign.emit(
-						expression[:match.start()] + f"{num_inside}"
-					)
-					return
+		:param expression: Mathematical expression that comes from the display.
+		"""
 
-				# Otherwise, we wrap the number in brackets and change the
-				# sign
-				if num.startswith('-'):
-					self.optChangeSign.emit(
-						expression[:match.start()] + f"{num[1:]}"
-					)
-					return
+		# Using a regular expression to find the last number or expression
+		# in parentheses
+		match = re.search(r'([-]?)(\(?-?\d+(\.\d+)?\)?)$', expression)
 
-				self.optChangeSign.emit(
-					expression[:match.start()] + f"(-{num})"
-				)
+		num = match.group(0)
+		num1 = match.group(1)
+		num2 = match.group(2)
 
-				return
+		# If the number is already in parentheses, extract it and
+		# change the sign
+		if num.startswith('(') and num.endswith(')'):
+			num_inside = num[1:-1]
+			if num_inside.startswith('-'):
+				num_inside = num_inside[1:]
+			else:
+				num_inside = '-' + num_inside
+			self.optChangeSign.emit(
+				expression[:match.start()] + f"{num_inside}"
+			)
+			return
+
+		# Otherwise, we wrap the number in brackets and change the
+		# sign
+		if num.startswith('-'):
+			self.optChangeSign.emit(
+				expression[:match.start()] + f"{num[1:]}"
+			)
+			return
+
+		self.optChangeSign.emit(
+			expression[:match.start()] + f"(-{num})"
+		)
+		return
 
 	@staticmethod
 	def _process_percentages(expression: str) -> str:
+		""" The method to handle the percentage symbol.
+
+		:param expression: Mathematical expression that comes from the display.
+		"""
 
 		# Find all occurrences of percentages in an expression
 		matches = re.finditer(r'(\d+(\.\d+)?)%', expression)
@@ -124,6 +139,10 @@ class BackendCalculator(QObject):
 
 	@staticmethod
 	def _process_multipl(expression: str) -> str:
+		""" The method to handle the multiplication symbol.
+
+		:param expression: Mathematical expression that comes from the display.
+		"""
 		return expression.replace("x", "*")
 
 
