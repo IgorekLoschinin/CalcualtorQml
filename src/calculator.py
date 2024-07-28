@@ -19,6 +19,7 @@ from PySide6.QtCore import (
 class BackendCalculator(QObject):
 
 	calExp = Signal(str)
+	optPoint = Signal(str)
 	optChangeSign = Signal(str)
 	histOutput = Signal(str)
 
@@ -27,9 +28,9 @@ class BackendCalculator(QObject):
 
 		self._expression: str = ""
 
-	@Slot(str)
-	def history(self, expression: str) -> None:
-		self.histOutput.emit(expression)
+	@property
+	def expression(self):
+		return self._expression
 
 	@Slot(str)
 	def calculate(self, expression: str) -> None:
@@ -50,8 +51,28 @@ class BackendCalculator(QObject):
 			self.calExp.emit(expression)
 
 	@Slot(str)
-	def changeSign(self, expression: str) -> None:
+	def history(self, expression: str) -> None:
+		""" The method that processes the history of operations - sends an
+		expression from the display.
 
+		:param expression: Mathematical expression that comes from the display.
+		"""
+		self.histOutput.emit(expression)
+
+	@Slot(str)
+	def addPoint(self, value: str) -> None:
+		""" Decimal point processing.
+
+		:param value: Expression to check.
+		"""
+
+		result_val = re.search(r'(\d+(\.\d+)?)$', value).group(0)
+
+		if result_val.isdigit():
+			self.optPoint.emit(value + ".")
+
+	@Slot(str)
+	def changeSign(self, expression: str) -> None:
 		if expression:
 			# Using a regular expression to find the last number or expression
 			# in parentheses

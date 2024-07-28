@@ -71,6 +71,10 @@ ApplicationWindow {
                     function onOptChangeSign(expres) {
                         displayArea.outputValue = expres
                     }
+
+                    function onOptPoint(exp) {
+                        displayArea.outputValue = exp
+                    }
                 }
             }
 

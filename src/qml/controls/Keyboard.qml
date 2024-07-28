@@ -191,9 +191,7 @@ GridLayout {
             bgColorPos2: "#292d36"
 
             onClicked: {
-                if (displayArea.outputValue === "0") {
-                    displayArea.outputValue += "."
-                }
+                backend.addPoint(displayArea.outputValue)
             }
         }
     }
