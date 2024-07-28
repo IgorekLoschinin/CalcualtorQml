@@ -23,6 +23,8 @@ Item {
         horizontalAlignment: Text.AlignRight
         verticalAlignment: Text.AlignTop
 
+        readOnly: true
+
         background: null
     }
 }

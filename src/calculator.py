@@ -5,6 +5,7 @@ import re
 import sys
 
 from pathlib import Path
+from copy import deepcopy
 
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
@@ -24,6 +25,8 @@ class BackendCalculator(QObject):
 	def __init__(self) -> None:
 		QObject.__init__(self)
 
+		self._expression: str = ""
+
 	@Slot(str)
 	def history(self, expression: str) -> None:
 		self.histOutput.emit(expression)
@@ -31,32 +34,20 @@ class BackendCalculator(QObject):
 	@Slot(str)
 	def calculate(self, expression: str) -> None:
 		try:
-			if "%" in expression:
-				self.calExp.emit(
-					str(eval(self.process_percentages(expression)))
-				)
-				return
+			self._expression = deepcopy(expression)
 
-			self.calExp.emit(str(eval(expression)))
+			if "%" in expression:
+				self._expression = self._process_percentages(self._expression)
+
+			if "x" in expression:
+				self._expression = self._process_multipl(self._expression)
+
+			self.calExp.emit(str(round(eval(self._expression), 7)))
 
 		except Exception as e:
+			# added messege for Error
 			print(e)
 			self.calExp.emit(expression)
-
-	@staticmethod
-	def process_percentages(expression: str) -> str:
-
-		# Find all occurrences of percentages in an expression
-		matches = re.finditer(r'(\d+(\.\d+)?)%', expression)
-		for match in matches:
-			percentage = float(match.group(1))
-
-			# Replace the percentage with its numeric value
-			expression = expression.replace(
-				match.group(0), f"({percentage}/100)"
-			)
-
-		return expression
 
 	@Slot(str)
 	def changeSign(self, expression: str) -> None:
@@ -79,17 +70,40 @@ class BackendCalculator(QObject):
 					self.optChangeSign.emit(
 						expression[:match.start()] + f"{num_inside}"
 					)
-				else:
-					# Otherwise, we wrap the number in brackets and change the
-					# sign
-					if num.startswith('-'):
-						self.optChangeSign.emit(
-							expression[:match.start()] + f"({num[1:]})"
-						)
-					else:
-						self.optChangeSign.emit(
-							expression[:match.start()] + f"(-{num})"
-						)
+					return
+
+				# Otherwise, we wrap the number in brackets and change the
+				# sign
+				if num.startswith('-'):
+					self.optChangeSign.emit(
+						expression[:match.start()] + f"{num[1:]}"
+					)
+					return
+
+				self.optChangeSign.emit(
+					expression[:match.start()] + f"(-{num})"
+				)
+
+				return
+
+	@staticmethod
+	def _process_percentages(expression: str) -> str:
+
+		# Find all occurrences of percentages in an expression
+		matches = re.finditer(r'(\d+(\.\d+)?)%', expression)
+		for match in matches:
+			percentage = float(match.group(1))
+
+			# Replace the percentage with its numeric value
+			expression = expression.replace(
+				match.group(0), f"({percentage}/100)"
+			)
+
+		return expression
+
+	@staticmethod
+	def _process_multipl(expression: str) -> str:
+		return expression.replace("x", "*")
 
 
 if __name__ == "__main__":
