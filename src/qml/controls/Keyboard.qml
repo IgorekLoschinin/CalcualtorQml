@@ -18,6 +18,37 @@ GridLayout {
     rowSpacing: 5
     columnSpacing: 5
 
+    function procMatOpt(operation) {
+
+        let expression = displayArea.outputValue + operation;
+        let result = expression.match(/([+\-x%\/]*)$/)[0];
+
+        if (result.length === 1) {
+            displayArea.outputValue += operation;
+            return
+
+        } else if (result.length === 2) {
+            if (result[0] === "%") {
+                displayArea.outputValue += operation;
+                return
+            }
+
+            displayArea.outputValue = displayArea.outputValue.slice(0, -1) + operation;
+            return
+        }
+
+    }
+
+    function btnDigitClicked(value) {
+        if (displayArea.outputValue === "0") {
+            displayArea.outputValue = value
+        } else if (displayArea.outputValue === historyOut.histValue) {
+            displayArea.outputValue = value
+        } else {
+            displayArea.outputValue += value
+        }
+    }
+
     Item {
         id: optClear
 
@@ -73,7 +104,7 @@ GridLayout {
             bgColorPos1: "#474d59"
             bgColorPos2: "#646a7a"
 
-            onClicked: buttonClicked("%")
+            onClicked: procMatOpt("%")
         }
     }
 
@@ -92,7 +123,7 @@ GridLayout {
             bgColorPos1: "#ca5a10"
             bgColorPos2: "#ea860a"
 
-            onClicked: buttonClicked("/")
+            onClicked: procMatOpt("/")
         }
     }
 
@@ -111,7 +142,7 @@ GridLayout {
             bgColorPos1: "#ca5a10"
             bgColorPos2: "#ea860a"
 
-            onClicked: buttonClicked("x")
+            onClicked: procMatOpt("x")
         }
     }
 
@@ -130,7 +161,7 @@ GridLayout {
             bgColorPos1: "#ca5a10"
             bgColorPos2: "#ea860a"
 
-            onClicked: buttonClicked("-")
+            onClicked: procMatOpt("-")
         }
     }
 
@@ -149,7 +180,7 @@ GridLayout {
             bgColorPos1: "#ca5a10"
             bgColorPos2: "#ea860a"
 
-            onClicked: buttonClicked("+")
+            onClicked: procMatOpt("+")
         }
     }
 
@@ -191,9 +222,7 @@ GridLayout {
             bgColorPos2: "#292d36"
 
             onClicked: {
-                if (displayArea.outputValue === "0") {
-                    displayArea.outputValue += "."
-                }
+                backend.addPoint(displayArea.outputValue)
             }
         }
     }
@@ -215,7 +244,7 @@ GridLayout {
             bgColorPos1: "#363a46"
             bgColorPos2: "#292d36"
 
-            onClicked: buttonClicked(0)
+            onClicked: btnDigitClicked(0)
         }
     }
 
@@ -234,7 +263,7 @@ GridLayout {
             bgColorPos1: "#363a46"
             bgColorPos2: "#292d36"
 
-            onClicked: buttonClicked(1)
+            onClicked: btnDigitClicked(1)
         }
     }
 
@@ -253,7 +282,7 @@ GridLayout {
             bgColorPos1: "#363a46"
             bgColorPos2: "#292d36"
 
-            onClicked: buttonClicked(2)
+            onClicked: btnDigitClicked(2)
         }
     }
 
@@ -272,7 +301,7 @@ GridLayout {
             bgColorPos1: "#363a46"
             bgColorPos2: "#292d36"
 
-            onClicked: buttonClicked(3)
+            onClicked: btnDigitClicked(3)
         }
     }
 
@@ -291,7 +320,7 @@ GridLayout {
             bgColorPos1: "#363a46"
             bgColorPos2: "#292d36"
 
-            onClicked: buttonClicked(4)
+            onClicked: btnDigitClicked(4)
         }
     }
 
@@ -310,7 +339,7 @@ GridLayout {
             bgColorPos1: "#363a46"
             bgColorPos2: "#292d36"
 
-            onClicked: buttonClicked(5)
+            onClicked: btnDigitClicked(5)
         }
     }
 
@@ -329,7 +358,7 @@ GridLayout {
             bgColorPos1: "#363a46"
             bgColorPos2: "#292d36"
 
-            onClicked: buttonClicked(6)
+            onClicked: btnDigitClicked(6)
         }
     }
 
@@ -348,7 +377,7 @@ GridLayout {
             bgColorPos1: "#363a46"
             bgColorPos2: "#292d36"
 
-            onClicked: buttonClicked(7)
+            onClicked: btnDigitClicked(7)
         }
     }
 
@@ -367,7 +396,7 @@ GridLayout {
             bgColorPos1: "#363a46"
             bgColorPos2: "#292d36"
 
-            onClicked: buttonClicked(8)
+            onClicked: btnDigitClicked(8)
         }
     }
 
@@ -386,7 +415,7 @@ GridLayout {
             bgColorPos1: "#363a46"
             bgColorPos2: "#292d36"
 
-            onClicked: buttonClicked(9)
+            onClicked: btnDigitClicked(9)
         }
     }
 
