@@ -85,39 +85,23 @@ class BackendCalculator(QObject):
 		:param expression: Mathematical expression that comes from the display.
 		"""
 
-		# Using a regular expression to find the last number or expression
-		# in parentheses
-		match = re.search(r'([-]?)(\(?-?\d+(\.\d+)?\)?)$', expression)
-
-		num = match.group(0)
-		num1 = match.group(1)
-		num2 = match.group(2)
-
-		# If the number is already in parentheses, extract it and
-		# change the sign
-		if num.startswith('(') and num.endswith(')'):
-			num_inside = num[1:-1]
-			if num_inside.startswith('-'):
-				num_inside = num_inside[1:]
-			else:
-				num_inside = '-' + num_inside
-			self.optChangeSign.emit(
-				expression[:match.start()] + f"{num_inside}"
-			)
+		# revert_sign
+		if expression.startswith("-"):
+			self.optChangeSign.emit(expression.strip("-"))
 			return
 
-		# Otherwise, we wrap the number in brackets and change the
-		# sign
-		if num.startswith('-'):
-			self.optChangeSign.emit(
-				expression[:match.start()] + f"{num[1:]}"
-			)
+		if "(" in expression and ")" in expression:
+			match = re.search(r'\(-(\d+(\.\d+)?)\)$', expression)
+			number = match.group(1)
+
+			self.optChangeSign.emit(expression[:match.start()] + number)
 			return
 
-		self.optChangeSign.emit(
-			expression[:match.start()] + f"(-{num})"
-		)
-		return
+		# change_sign
+		match = re.search(r'(\d+(\.\d+)?)$', expression)
+		number = f"(-{match.group(1)})"
+
+		self.optChangeSign.emit(expression[:match.start()] + number)
 
 	@staticmethod
 	def _process_percentages(expression: str) -> str:
