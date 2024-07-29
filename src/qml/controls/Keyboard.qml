@@ -40,13 +40,25 @@ GridLayout {
     }
 
     function btnDigitClicked(value) {
+        let replZero = displayArea.outputValue.match(/([+\-x%)\/]*0)$/);
+
         if (displayArea.outputValue === "0") {
             displayArea.outputValue = value
+            return
+
         } else if (displayArea.outputValue === historyOut.histValue) {
             displayArea.outputValue = value
+            return
+
+        } else if (replZero !== null && replZero[0].endsWith("0")) {
+            displayArea.outputValue = displayArea.outputValue.slice(0, -1) + value;
+            return
+
         } else {
             displayArea.outputValue += value
         }
+
+        return
     }
 
     Item {
