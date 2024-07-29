@@ -14,14 +14,6 @@ ApplicationWindow {
     minimumHeight: 600
     minimumWidth: 300
 
-    function buttonClicked(value) {
-        if (displayArea.outputValue === "0") {
-            displayArea.outputValue = value
-        } else {
-            displayArea.outputValue += value
-        }
-    }
-
     Rectangle {
         id: bg
         anchors.fill: parent

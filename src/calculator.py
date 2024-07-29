@@ -19,9 +19,10 @@ from PySide6.QtCore import (
 class BackendCalculator(QObject):
 
 	calExp = Signal(str)
+	histOutput = Signal(str)
+
 	optPoint = Signal(str)
 	optChangeSign = Signal(str)
-	histOutput = Signal(str)
 
 	def __init__(self) -> None:
 		QObject.__init__(self)
