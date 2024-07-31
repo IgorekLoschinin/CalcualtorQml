@@ -2,21 +2,17 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
-GridLayout {
+Control {
+    id: keybord
+
     Layout.fillHeight: true
     Layout.fillWidth: true
 
-    Layout.alignment: Qt.AlignCenter
     Layout.preferredHeight: 385
 
     Layout.leftMargin: 10
     Layout.rightMargin: 10
-    Layout.bottomMargin: bg.radius
-
-    rows: 5
-    columns: 4
-    rowSpacing: 5
-    columnSpacing: 5
+    Layout.bottomMargin: bg.radius - 1
 
     function procMatOpt(operation) {
 
@@ -40,383 +36,245 @@ GridLayout {
     }
 
     function btnDigitClicked(value) {
+        let replZero = displayArea.outputValue.match(/([+\-x%)\/]*0)$/);
+
         if (displayArea.outputValue === "0") {
             displayArea.outputValue = value
+            return
+
         } else if (displayArea.outputValue === historyOut.histValue) {
             displayArea.outputValue = value
+            return
+
+        } else if (replZero !== null && replZero[0].endsWith("0")) {
+            displayArea.outputValue = displayArea.outputValue.slice(0, -1) + value;
+            return
+
         } else {
             displayArea.outputValue += value
         }
+
+        return
     }
 
-    Item {
-        id: optClear
 
-        Layout.fillHeight: true
-        Layout.fillWidth: true
+    contentItem: GridLayout {
+        uniformCellHeights: true
+        uniformCellWidths: true
 
-        Layout.row: 0
-        Layout.column: 0
+        rows: 5
+        columns: 4
+        rowSpacing: 5
+        columnSpacing: 5
 
-        CustomBtn {
-            text: qsTr("C")
+        Repeater {
+            model: ListModel {
+                ListElement {
+                    name: qsTr("C")
 
-            bgColorPos1: "#474d59"
-            bgColorPos2: "#646a7a"
+                    bgColorPos1: "#474d59"
+                    bgColorPos2: "#646a7a"
+                }
+                ListElement {
+                    name: qsTr("+/-")
 
-            onClicked: {displayArea.outputValue = 0}
-        }
-    }
+                    bgColorPos1: "#474d59"
+                    bgColorPos2: "#646a7a"
+                }
+                ListElement {
+                    name: qsTr("%")
 
-    Item {
-        id: optSumDiff
+                    bgColorPos1: "#474d59"
+                    bgColorPos2: "#646a7a"
+                }
+                ListElement {
+                    name: qsTr("/")
 
-        Layout.fillHeight: true
-        Layout.fillWidth: true
+                    bgColorPos1: "#ca5a10"
+                    bgColorPos2: "#ea860a"
+                }
+                ListElement {
+                    name: qsTr("7")
 
-        Layout.row: 0
-        Layout.column: 1
+                    bgColorPos1: "#363a46"
+                    bgColorPos2: "#292d36"
+                }
+                ListElement {
+                    name: qsTr("8")
 
-        CustomBtn {
-            text: qsTr("+/-")
+                    bgColorPos1: "#363a46"
+                    bgColorPos2: "#292d36"
+                }
+                ListElement {
+                    name: qsTr("9")
 
-            bgColorPos1: "#474d59"
-            bgColorPos2: "#646a7a"
+                    bgColorPos1: "#363a46"
+                    bgColorPos2: "#292d36"
+                }
+                ListElement {
+                    name: qsTr("x")
 
-            onClicked: {
-                backend.changeSign(displayArea.outputValue)
+                    bgColorPos1: "#ca5a10"
+                    bgColorPos2: "#ea860a"
+                }
+                ListElement {
+                    name: qsTr("4")
+
+                    bgColorPos1: "#363a46"
+                    bgColorPos2: "#292d36"
+                }
+                ListElement {
+                    name: qsTr("5")
+
+                    bgColorPos1: "#363a46"
+                    bgColorPos2: "#292d36"
+                }
+                ListElement {
+                    name: qsTr("6")
+
+                    bgColorPos1: "#363a46"
+                    bgColorPos2: "#292d36"
+                }
+                ListElement {
+                    name: qsTr("-")
+
+                    bgColorPos1: "#ca5a10"
+                    bgColorPos2: "#ea860a"
+                }
+                ListElement {
+                    name: qsTr("1")
+
+                    bgColorPos1: "#363a46"
+                    bgColorPos2: "#292d36"
+                }
+                ListElement {
+                    name: qsTr("2")
+
+                    bgColorPos1: "#363a46"
+                    bgColorPos2: "#292d36"
+                }
+                ListElement {
+                    name: qsTr("3")
+
+                    bgColorPos1: "#363a46"
+                    bgColorPos2: "#292d36"
+                }
+                ListElement {
+                    name: qsTr("+")
+
+                    bgColorPos1: "#ca5a10"
+                    bgColorPos2: "#ea860a"
+                }
+                ListElement {
+                    name: qsTr("0")
+
+                    bgColorPos1: "#363a46"
+                    bgColorPos2: "#292d36"
+
+                    layoutRowSpan: true
+                    layoutColumnSpan: true
+
+                }
+                ListElement {
+                    name: qsTr(".")
+
+                    bgColorPos1: "#363a46"
+                    bgColorPos2: "#292d36"
+                }
+                ListElement {
+                    name: qsTr("=")
+
+                    bgColorPos1: "#ca5a10"
+                    bgColorPos2: "#ea860a"
+                }
+            }
+
+            delegate: CustomBtn {
+                text: model.name
+
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+
+                Layout.rowSpan: {
+                    if (model.layoutRowSpan) {
+                        return 1
+                    }
+                    return true
+                }
+                Layout.columnSpan: {
+                    if (model.layoutColumnSpan) {
+                        return 2
+                    }
+                    return true
+                }
+
+                bgColorPos1: model.bgColorPos1
+                bgColorPos2: model.bgColorPos2
+
+                onClicked: {
+                    switch (model.name) {
+                    case "C": displayArea.outputValue = 0
+                        return
+
+                    case "+/-": backend.changeSign(displayArea.outputValue)
+                        return
+
+                    case "%": procMatOpt("%")
+                        return
+
+                    case "/": procMatOpt("/")
+                        return
+
+                    case "x": procMatOpt("x")
+                        return
+
+                    case "-": procMatOpt("-")
+                        return
+
+                    case "+": procMatOpt("+")
+                        return
+
+                    case "=":
+                        backend.calculate(displayArea.outputValue)
+                        backend.history(displayArea.outputValue)
+                        return
+
+                    case ".": backend.addPoint(displayArea.outputValue)
+                        return
+
+                    case "0": btnDigitClicked(0)
+                        return
+
+                    case "1": btnDigitClicked(1)
+                        return
+
+                    case "2": btnDigitClicked(2)
+                        return
+
+                    case "3": btnDigitClicked(3)
+                        return
+
+                    case "4": btnDigitClicked(4)
+                        return
+
+                    case "5": btnDigitClicked(5)
+                        return
+
+                    case "6": btnDigitClicked(6)
+                        return
+
+                    case "7": btnDigitClicked(7)
+                        return
+
+                    case "8": btnDigitClicked(8)
+                        return
+
+                    case "9": btnDigitClicked(9)
+                        return
+                    }
+                }
             }
         }
     }
-
-    Item {
-        id: optPercentage
-
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-
-        Layout.row: 0
-        Layout.column: 2
-
-        CustomBtn {
-            text: qsTr("%")
-
-            bgColorPos1: "#474d59"
-            bgColorPos2: "#646a7a"
-
-            onClicked: procMatOpt("%")
-        }
-    }
-
-    Item {
-        id: optDivision
-
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-
-        Layout.row: 0
-        Layout.column: 3
-
-        CustomBtn {
-            text: qsTr("/")
-
-            bgColorPos1: "#ca5a10"
-            bgColorPos2: "#ea860a"
-
-            onClicked: procMatOpt("/")
-        }
-    }
-
-    Item {
-        id: optMultiplication
-
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-
-        Layout.row: 1
-        Layout.column: 3
-
-        CustomBtn {
-            text: qsTr("x")
-
-            bgColorPos1: "#ca5a10"
-            bgColorPos2: "#ea860a"
-
-            onClicked: procMatOpt("x")
-        }
-    }
-
-    Item {
-        id: optDiff
-
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-
-        Layout.row: 2
-        Layout.column: 3
-
-        CustomBtn {
-            text: qsTr("-")
-
-            bgColorPos1: "#ca5a10"
-            bgColorPos2: "#ea860a"
-
-            onClicked: procMatOpt("-")
-        }
-    }
-
-    Item {
-        id: optSum
-
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-
-        Layout.row: 3
-        Layout.column: 3
-
-        CustomBtn {
-            text: qsTr("+")
-
-            bgColorPos1: "#ca5a10"
-            bgColorPos2: "#ea860a"
-
-            onClicked: procMatOpt("+")
-        }
-    }
-
-    Item {
-        id: optEqualse
-
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-
-        Layout.row: 4
-        Layout.column: 3
-
-        CustomBtn {
-            text: qsTr("=")
-
-            bgColorPos1: "#ca5a10"
-            bgColorPos2: "#ea860a"
-
-            onClicked: {
-                backend.calculate(displayArea.outputValue)
-                backend.history(displayArea.outputValue)
-            }
-        }
-    }
-
-    Item {
-        id: optPoint
-
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-
-        Layout.row: 4
-        Layout.column: 2
-
-        CustomBtn {
-            text: qsTr(".")
-
-            bgColorPos1: "#363a46"
-            bgColorPos2: "#292d36"
-
-            onClicked: {
-                backend.addPoint(displayArea.outputValue)
-            }
-        }
-    }
-
-    Item {
-        id: digit0
-
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-
-        Layout.row: 4
-        Layout.column: 0
-        Layout.rowSpan: 1
-        Layout.columnSpan: 2
-
-        CustomBtn {
-            text: qsTr("0")
-
-            bgColorPos1: "#363a46"
-            bgColorPos2: "#292d36"
-
-            onClicked: btnDigitClicked(0)
-        }
-    }
-
-    Item {
-        id: digit1
-
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-
-        Layout.row: 3
-        Layout.column: 0
-
-        CustomBtn {
-            text: qsTr("1")
-
-            bgColorPos1: "#363a46"
-            bgColorPos2: "#292d36"
-
-            onClicked: btnDigitClicked(1)
-        }
-    }
-
-    Item {
-        id: digit2
-
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-
-        Layout.row: 3
-        Layout.column: 1
-
-        CustomBtn {
-            text: qsTr("2")
-
-            bgColorPos1: "#363a46"
-            bgColorPos2: "#292d36"
-
-            onClicked: btnDigitClicked(2)
-        }
-    }
-
-    Item {
-        id: digit3
-
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-
-        Layout.row: 3
-        Layout.column: 2
-
-        CustomBtn {
-            text: qsTr("3")
-
-            bgColorPos1: "#363a46"
-            bgColorPos2: "#292d36"
-
-            onClicked: btnDigitClicked(3)
-        }
-    }
-
-    Item {
-        id: digit4
-
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-
-        Layout.row: 2
-        Layout.column: 0
-
-        CustomBtn {
-            text: qsTr("4")
-
-            bgColorPos1: "#363a46"
-            bgColorPos2: "#292d36"
-
-            onClicked: btnDigitClicked(4)
-        }
-    }
-
-    Item {
-        id: digit5
-
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-
-        Layout.row: 2
-        Layout.column: 1
-
-        CustomBtn {
-            text: qsTr("5")
-
-            bgColorPos1: "#363a46"
-            bgColorPos2: "#292d36"
-
-            onClicked: btnDigitClicked(5)
-        }
-    }
-
-    Item {
-        id: digit6
-
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-
-        Layout.row: 2
-        Layout.column: 2
-
-        CustomBtn {
-            text: qsTr("6")
-
-            bgColorPos1: "#363a46"
-            bgColorPos2: "#292d36"
-
-            onClicked: btnDigitClicked(6)
-        }
-    }
-
-    Item {
-        id: digit7
-
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-
-        Layout.row: 1
-        Layout.column: 0
-
-        CustomBtn {
-            text: qsTr("7")
-
-            bgColorPos1: "#363a46"
-            bgColorPos2: "#292d36"
-
-            onClicked: btnDigitClicked(7)
-        }
-    }
-
-    Item {
-        id: digit8
-
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-
-        Layout.row: 1
-        Layout.column: 1
-
-        CustomBtn {
-            text: qsTr("8")
-
-            bgColorPos1: "#363a46"
-            bgColorPos2: "#292d36"
-
-            onClicked: btnDigitClicked(8)
-        }
-    }
-
-    Item {
-        id: digit9
-
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-
-        Layout.row: 1
-        Layout.column: 2
-
-        CustomBtn {
-            text: qsTr("9")
-
-            bgColorPos1: "#363a46"
-            bgColorPos2: "#292d36"
-
-            onClicked: btnDigitClicked(9)
-        }
-    }
-
 }
+

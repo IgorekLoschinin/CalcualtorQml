@@ -12,8 +12,6 @@ Button {
     Layout.leftMargin: 15
     Layout.rightMargin: 15
 
-
-
     contentItem: Image {
         source: "../../icons/icons8-microphone-48.png"
 

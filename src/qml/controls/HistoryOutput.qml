@@ -1,7 +1,8 @@
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Controls
 
-Item {
+Control {
     Layout.fillHeight: true
     Layout.fillWidth: true
     Layout.preferredHeight: 80
@@ -12,7 +13,7 @@ Item {
 
     property string histValue: "0"
 
-    Text {
+    contentItem: Text {
         id: output
         anchors.fill: parent
 

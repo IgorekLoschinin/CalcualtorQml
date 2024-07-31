@@ -85,39 +85,23 @@ class BackendCalculator(QObject):
 		:param expression: Mathematical expression that comes from the display.
 		"""
 
-		# Using a regular expression to find the last number or expression
-		# in parentheses
-		match = re.search(r'([-]?)(\(?-?\d+(\.\d+)?\)?)$', expression)
-
-		num = match.group(0)
-		num1 = match.group(1)
-		num2 = match.group(2)
-
-		# If the number is already in parentheses, extract it and
-		# change the sign
-		if num.startswith('(') and num.endswith(')'):
-			num_inside = num[1:-1]
-			if num_inside.startswith('-'):
-				num_inside = num_inside[1:]
-			else:
-				num_inside = '-' + num_inside
-			self.optChangeSign.emit(
-				expression[:match.start()] + f"{num_inside}"
-			)
+		# revert_sign
+		if expression.startswith("-"):
+			self.optChangeSign.emit(expression.strip("-"))
 			return
 
-		# Otherwise, we wrap the number in brackets and change the
-		# sign
-		if num.startswith('-'):
-			self.optChangeSign.emit(
-				expression[:match.start()] + f"{num[1:]}"
-			)
+		if "(" in expression and ")" in expression:
+			match = re.search(r'\(-(\d+(\.\d+)?)\)$', expression)
+			number = match.group(1)
+
+			self.optChangeSign.emit(expression[:match.start()] + number)
 			return
 
-		self.optChangeSign.emit(
-			expression[:match.start()] + f"(-{num})"
-		)
-		return
+		# change_sign
+		match = re.search(r'(\d+(\.\d+)?)$', expression)
+		number = f"(-{match.group(1)})"
+
+		self.optChangeSign.emit(expression[:match.start()] + number)
 
 	@staticmethod
 	def _process_percentages(expression: str) -> str:
@@ -126,15 +110,27 @@ class BackendCalculator(QObject):
 		:param expression: Mathematical expression that comes from the display.
 		"""
 
-		# Find all occurrences of percentages in an expression
-		matches = re.finditer(r'(\d+(\.\d+)?)%', expression)
-		for match in matches:
-			percentage = float(match.group(1))
-
-			# Replace the percentage with its numeric value
-			expression = expression.replace(
-				match.group(0), f"({percentage}/100)"
+		if ("(" and ")") in expression:
+			# Find all occurrences of percentages in an expression
+			percentage = (
+				re.search(r'\(-(\d+(\.\d+)?)\)%$', expression).group(0)
 			)
+
+			expression = expression.replace(
+				percentage,
+				f"({percentage.strip("%").replace("(", "").replace(")", "")}/100)"
+			)
+
+			return expression
+
+		# Find all occurrences of percentages in an expression
+		matches = re.search(r'(\d+(\.\d+)?)%', expression)
+		percentage = float(matches.group(1))
+
+		# Replace the percentage with its numeric value
+		expression = expression.replace(
+			matches.group(0), f"({percentage}/100)"
+		)
 
 		return expression
 

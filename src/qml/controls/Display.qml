@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
-Item {
+Control {
     Layout.fillHeight: true
     Layout.fillWidth: true
     Layout.preferredHeight: 80
@@ -12,7 +12,7 @@ Item {
 
     property string outputValue: "0"
 
-    TextField {
+    contentItem: TextField {
         id: disOutputText
         anchors.fill: parent
 

@@ -39,35 +39,11 @@ ApplicationWindow {
             // Вывод истории
             HistoryOutput {
                 id: historyOut
-
-                Connections {
-                    target: backend
-
-                    function onHistOutput(value) {
-                        historyOut.histValue = value
-                    }
-                }
             }
 
             // Дисплей
             Display {
                 id: displayArea
-
-                Connections {
-                    target: backend
-
-                    function onCalExp(exp) {
-                        displayArea.outputValue = exp
-                    }
-
-                    function onOptChangeSign(expres) {
-                        displayArea.outputValue = expres
-                    }
-
-                    function onOptPoint(exp) {
-                        displayArea.outputValue = exp
-                    }
-                }
             }
 
             // Разделительная линия
@@ -83,11 +59,31 @@ ApplicationWindow {
                 border.color: "#b8bbc2"
             }
 
-            // Область с цифрами и мат операциями
             Keyboard {
                 id: numpadGrid
             }
 
+        }
+
+    }
+
+    Connections {
+        target: backend
+
+        function onCalExp(exp) {
+            displayArea.outputValue = exp
+        }
+
+        function onOptChangeSign(expres) {
+            displayArea.outputValue = expres
+        }
+
+        function onOptPoint(exp) {
+            displayArea.outputValue = exp
+        }
+
+        function onHistOutput(value) {
+            historyOut.histValue = value
         }
 
     }
