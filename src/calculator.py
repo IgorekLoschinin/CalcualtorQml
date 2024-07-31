@@ -19,6 +19,7 @@ from PySide6.QtCore import (
 class BackendCalculator(QObject):
 
 	calExp = Signal(str)
+	errMsgSig = Signal(bool)
 	histOutput = Signal(str)
 
 	optPoint = Signal(str)
@@ -53,8 +54,12 @@ class BackendCalculator(QObject):
 
 		except Exception as e:
 			# added messege for Error
-			print(e)
+			self.errorMsg(False)
 			self.calExp.emit(expression)
+
+	@Slot(bool)
+	def errorMsg(self, flag: bool) -> None:
+		self.errMsgSig.emit(flag)
 
 	@Slot(str)
 	def history(self, expression: str) -> None:
