@@ -123,7 +123,7 @@ class BackendCalculator(QObject):
 
 			expression = expression.replace(
 				percentage,
-				f"({percentage.strip("%").replace("(", "").replace(")", "")}/100)"
+				f"({percentage.rstrip('%').replace('(', '').replace(')', '')}/100)"
 			)
 
 			return expression
