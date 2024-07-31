@@ -88,6 +88,10 @@ ApplicationWindow {
                 id: numpadGrid
             }
 
+            // Keyboard1 {
+            //     id: numpadGrid
+            // }
+
         }
 
     }

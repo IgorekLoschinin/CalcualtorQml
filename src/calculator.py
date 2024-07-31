@@ -110,15 +110,27 @@ class BackendCalculator(QObject):
 		:param expression: Mathematical expression that comes from the display.
 		"""
 
-		# Find all occurrences of percentages in an expression
-		matches = re.finditer(r'(\d+(\.\d+)?)%', expression)
-		for match in matches:
-			percentage = float(match.group(1))
-
-			# Replace the percentage with its numeric value
-			expression = expression.replace(
-				match.group(0), f"({percentage}/100)"
+		if ("(" and ")") in expression:
+			# Find all occurrences of percentages in an expression
+			percentage = (
+				re.search(r'\(-(\d+(\.\d+)?)\)%$', expression).group(0)
 			)
+
+			expression = expression.replace(
+				percentage,
+				f"({percentage.strip("%").replace("(", "").replace(")", "")}/100)"
+			)
+
+			return expression
+
+		# Find all occurrences of percentages in an expression
+		matches = re.search(r'(\d+(\.\d+)?)%', expression)
+		percentage = float(matches.group(1))
+
+		# Replace the percentage with its numeric value
+		expression = expression.replace(
+			matches.group(0), f"({percentage}/100)"
+		)
 
 		return expression
 
