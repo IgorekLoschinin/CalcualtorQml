@@ -6,6 +6,7 @@ import "./controls"
 
 
 ApplicationWindow {
+    id: appCalculation
     title: qsTr("Calculation")
     visible: true
     width: 300
@@ -63,6 +64,9 @@ ApplicationWindow {
                 id: numpadGrid
             }
 
+            AlertError {
+                id: popup
+            }
         }
 
     }
@@ -72,6 +76,13 @@ ApplicationWindow {
 
         function onCalExp(exp) {
             displayArea.outputValue = exp
+        }
+
+        function onErrMsgSig(flag) {
+            if (!flag) {
+                popup.open()
+            }
+
         }
 
         function onOptChangeSign(expres) {
