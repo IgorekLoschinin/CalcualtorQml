@@ -9,7 +9,7 @@ ApplicationWindow {
     id: appCalculation
     title: qsTr("Calculation")
     visible: true
-    width: 300
+    width: 290
     height: 600
 
     minimumHeight: 600
@@ -27,10 +27,7 @@ ApplicationWindow {
 
         ColumnLayout {
             spacing: 2
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
+            anchors.fill: parent
 
             // Голосовой ввод с иконкой
             VoiceInput {
@@ -45,19 +42,6 @@ ApplicationWindow {
             // Дисплей
             Display {
                 id: displayArea
-            }
-
-            // Разделительная линия
-            Rectangle {
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-
-                Layout.bottomMargin: 10
-                Layout.leftMargin: 10
-                Layout.rightMargin: 10
-
-                height: 0.5
-                border.color: "#b8bbc2"
             }
 
             Keyboard {

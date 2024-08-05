@@ -5,21 +5,25 @@ import QtQuick.Layouts
 Button {
     hoverEnabled: false
 
-    Layout.preferredHeight: 50
-    Layout.preferredWidth: 50
-
     Layout.topMargin: 15
     Layout.leftMargin: 15
     Layout.rightMargin: 15
 
-    contentItem: Image {
-        source: "../../icons/icons8-microphone-48.png"
+    contentItem: ColorImage {
+        source: "../../icons/microphone-svgrepo-com.svg"
 
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
+        fillMode: Image.PreserveAspectFit
+        anchors.centerIn: bgBtnVI
+        sourceSize.height: 25
+        color: "white"
     }
 
     background: Rectangle {
+        id: bgBtnVI
+
+        width: 55
+        height: 40
+
         topLeftRadius: bg.radius + 5
         topRightRadius: 30
         bottomRightRadius: 30

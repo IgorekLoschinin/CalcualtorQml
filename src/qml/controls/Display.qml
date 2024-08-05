@@ -5,10 +5,10 @@ import QtQuick.Controls
 Control {
     Layout.fillHeight: true
     Layout.fillWidth: true
-    Layout.preferredHeight: 80
 
     Layout.leftMargin: 10
     Layout.rightMargin: 10
+    Layout.bottomMargin: 30
 
     property string outputValue: "0"
 
