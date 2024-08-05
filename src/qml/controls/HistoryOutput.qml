@@ -5,7 +5,6 @@ import QtQuick.Controls
 Control {
     Layout.fillHeight: true
     Layout.fillWidth: true
-    Layout.preferredHeight: 80
     Layout.topMargin: bg.radius
 
     Layout.leftMargin: 10
