@@ -37,8 +37,25 @@ The calculator.py script to run the application.
 calculator.qml - the main QML file describing the calculator interface, 
 implementing the calculator logic.
 
+## Build
+To assemble the application into one executable file - .exe, you need to follow
+the instructions in the Installation section, then:
+
+```
+cd scripts
+build.*
+```
+Ttwo folders will appear in the scripts folder: build and dist:
+```
+scripts\
+    build\
+    dict\
+        calculator.exe
+```
+
 ## Usage
-After starting the application, you will see the calculator interface. Enter numbers and choose the necessary operation (+, -, *, /) to perform calculations. Press the "=" button to get the result. The "C" button clears the current expression.
+After starting the application, you will see the calculator interface. Enter 
+numbers and choose the necessary operation (+, -, *, /) to perform calculations. Press the "=" button to get the result. The "C" button clears the current expression.
 
 ## Testing
 To run the tests, use pytest. Ensure that you have pytest and pytest-qt installed.
